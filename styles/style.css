@@ -161,3 +161,29 @@ body.dark .grid-container {
 body.dark .facts {
   background-color: #333333;
 }
+
+#clock {
+  font-weight: bold;
+}
+
+#fact {
+  font-style: italic;
+}
+
+body {
+  transition: background-color 0.4s, color 0.4s;
+}
+
+.recipe {
+  margin-top: 15px;
+  padding: 10px;
+  border: 1px dashed #33b5e5;
+}
+
+.recipe h2 {
+  font-size: 20px;
+}
+
+body.dark .content a {
+  color: #66ccff;
+}
