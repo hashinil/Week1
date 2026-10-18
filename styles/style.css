@@ -134,3 +134,30 @@ a {
   }
 
 }
+/* JavaScript enhancements */
+button {
+  padding: 8px 14px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  background-color: #33b5e5;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0099cc;
+}
+
+body.dark {
+  background-color: #222222;
+  color: #eeeeee;
+}
+
+body.dark .grid-container {
+  background-color: #222222;
+}
+
+body.dark .facts {
+  background-color: #333333;
+}
