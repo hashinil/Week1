@@ -1,4 +1,4 @@
-// 1. Show a greeting based on the time of day
+// 1. Greeting based on the time of day
 const hour = new Date().getHours();
 let message;
 
@@ -12,7 +12,7 @@ if (hour < 12) {
 
 document.getElementById("greeting").textContent = message;
 
-// 2. Live clock that updates every second
+// 2. Live clock
 const clock = document.getElementById("clock");
 
 function updateClock() {
@@ -22,42 +22,43 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-// 3. Dark mode that is remembered with localStorage
+// 3. Dark mode using Bootstrap's built-in colour modes, remembered with localStorage
 const themeBtn = document.getElementById("themeBtn");
 
 function applyTheme(theme) {
-  document.body.classList.toggle("dark", theme === "dark");
+  document.documentElement.setAttribute("data-bs-theme", theme);
   themeBtn.textContent = theme === "dark" ? "Light mode" : "Dark mode";
 }
 
 applyTheme(localStorage.getItem("theme") || "light");
 
 themeBtn.addEventListener("click", function () {
-  const newTheme = document.body.classList.contains("dark") ? "light" : "dark";
+  const current = document.documentElement.getAttribute("data-bs-theme");
+  const newTheme = current === "dark" ? "light" : "dark";
   localStorage.setItem("theme", newTheme);
   applyTheme(newTheme);
 });
 
 // 4. Switch the picture between my two interests
 const interests = [
-  { src: "images/rubic.png", alt: "Rubik's Cube", label: "Show Rubik's Cube" },
-  { src: "images/cooking.jpg", alt: "Cooking", label: "Show cooking" }
+  { src: "images/rubic.png", alt: "A collection of Rubik's Cubes", label: "Show Rubik's Cube" },
+  { src: "images/cooking.jpg", alt: "Some of the food I have cooked", label: "Show cooking" }
 ];
-let current = 0;
+let currentImage = 0;
 
 const interestImg = document.getElementById("interestImg");
 const imageBtn = document.getElementById("imageBtn");
 
 imageBtn.addEventListener("click", function () {
-  current = (current + 1) % interests.length;
-  const next = (current + 1) % interests.length;
+  currentImage = (currentImage + 1) % interests.length;
+  const next = (currentImage + 1) % interests.length;
 
-  interestImg.src = interests[current].src;
-  interestImg.alt = interests[current].alt;
+  interestImg.src = interests[currentImage].src;
+  interestImg.alt = interests[currentImage].alt;
   imageBtn.textContent = interests[next].label;
 });
 
-// 5. Show a random fun fact from an array
+// 5. Random fun fact (never the same one twice in a row)
 const facts = [
   "A standard Rubik's Cube has over 43 quintillion possible positions.",
   "Any Rubik's Cube position can be solved in 20 moves or fewer.",
@@ -67,13 +68,11 @@ const facts = [
 
 const factBtn = document.getElementById("factBtn");
 const factText = document.getElementById("fact");
-
 let lastIndex = -1;
 
 factBtn.addEventListener("click", function () {
   let randomIndex;
 
-  // keep picking until we get a different fact from last time
   do {
     randomIndex = Math.floor(Math.random() * facts.length);
   } while (randomIndex === lastIndex);
@@ -82,35 +81,102 @@ factBtn.addEventListener("click", function () {
   factText.textContent = facts[randomIndex];
 });
 
-// 6. Get a random recipe from TheMealDB API
-const recipeBtn = document.getElementById("recipeBtn");
-const recipeResult = document.getElementById("recipeResult");
+// 6. Recipe search form using TheMealDB API
+const recipeForm = document.getElementById("recipeForm");
+const ingredientInput = document.getElementById("ingredient");
+const recipeStatus = document.getElementById("recipeStatus");
+const recipeResults = document.getElementById("recipeResults");
 
-async function getRandomRecipe() {
-  recipeResult.textContent = "Loading recipe...";
+// Builds one Bootstrap card for a meal.
+// I create elements with textContent instead of innerHTML, which is safer for data from an API.
+function createRecipeCard(meal) {
+  const col = document.createElement("div");
+  col.className = "col";
+
+  const card = document.createElement("div");
+  card.className = "card h-100";
+
+  const img = document.createElement("img");
+  img.src = meal.strMealThumb;
+  img.alt = meal.strMeal;
+  img.className = "card-img-top recipe-img";
+
+  const body = document.createElement("div");
+  body.className = "card-body";
+
+  const title = document.createElement("h3");
+  title.className = "h6 card-title";
+  title.textContent = meal.strMeal;
+
+  const link = document.createElement("a");
+  link.href = "https://www.themealdb.com/meal/" + meal.idMeal;
+  link.target = "_blank";
+  link.className = "btn btn-sm btn-outline-primary";
+  link.textContent = "View recipe";
+
+  body.append(title, link);
+  card.append(img, body);
+  col.append(card);
+  return col;
+}
+
+recipeForm.addEventListener("submit", async function (event) {
+  event.preventDefault(); // stop the page from reloading
+
+  const ingredient = ingredientInput.value.trim();
+  if (ingredient === "") {
+    recipeStatus.textContent = "Please enter an ingredient.";
+    return;
+  }
+
+  recipeStatus.textContent = "Searching...";
+  recipeResults.innerHTML = "";
 
   try {
-    const response = await fetch("https://www.themealdb.com/api/json/v1/1/random.php");
+    const url = "https://www.themealdb.com/api/json/v1/1/filter.php?i=" + encodeURIComponent(ingredient);
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
 
     const data = await response.json();
-    const meal = data.meals[0]; // the API returns an array with one meal
-    const link = meal.strSource || meal.strYoutube;
 
-    recipeResult.innerHTML = `
-      <h3>${meal.strMeal}</h3>
-      <p><strong>Category:</strong> ${meal.strCategory} |
-         <strong>Cuisine:</strong> ${meal.strArea}</p>
-      <img src="${meal.strMealThumb}" alt="${meal.strMeal}" width="300">
-      ${link ? `<p><a href="${link}" target="_blank">View full recipe</a></p>` : ""}
-    `;
+    // The API returns { meals: null } when nothing matches
+    if (!data.meals) {
+      recipeStatus.textContent = `No recipes found for "${ingredient}". Try another ingredient.`;
+      return;
+    }
+
+    const meals = data.meals.slice(0, 8); // show the first 8 results
+    recipeStatus.textContent = `Showing ${meals.length} of ${data.meals.length} recipes with "${ingredient}".`;
+
+    meals.forEach(function (meal) {
+      recipeResults.append(createRecipeCard(meal));
+    });
   } catch (error) {
-    recipeResult.textContent = "Sorry, the recipe could not be loaded. Please try again.";
+    recipeStatus.textContent = "Sorry, recipes could not be loaded. Please try again.";
     console.error(error);
   }
-}
+});
 
-recipeBtn.addEventListener("click", getRandomRecipe);
+// 7. Contact form with Bootstrap validation
+const contactForm = document.getElementById("contactForm");
+const contactSuccess = document.getElementById("contactSuccess");
+
+contactForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  if (!contactForm.checkValidity()) {
+    contactForm.classList.add("was-validated"); // shows Bootstrap's red/green messages
+    return;
+  }
+
+  // There is no server yet, so just thank the user
+  const name = document.getElementById("name").value.trim();
+  contactSuccess.textContent = `Thank you, ${name}! Your message has been received.`;
+  contactSuccess.classList.remove("d-none");
+
+  contactForm.reset();
+  contactForm.classList.remove("was-validated");
+});
