@@ -1,80 +1,138 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-bs-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hashini's Bootstrap Web App</title>
 
-    <title>Welcome to My Web Page</title>
-    <link rel="stylesheet" href="styles/style.css">
+    <!-- Bootstrap 5 CSS (from the Get Started guide) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- My own small extra styles -->
+    <link href="css/style.css" rel="stylesheet">
 </head>
 
 <body>
-    <main>
-        <div class="grid-container">
+    <!-- Accessibility: lets keyboard users jump straight to the content -->
+    <a class="visually-hidden-focusable" href="#main">Skip to main content</a>
 
-            <div class="header">
-                <h1>Hello, Everyone! 👋</h1>
-                <p id="greeting"></p>
-                <p id="clock"></p>
-                <button id="themeBtn">Dark mode</button>
-            </div>
-
-            <div class="menu">
-                <ul>
-                    <li>
-                        <a href="https://www.linkedin.com/in/hashiniliyanage/">
-                            LinkedIn
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://github.com/hashinil">
-                            GitHub
-                        </a>
-                    </li>
+    <!-- Responsive navbar: collapses into a menu button on small screens -->
+    <nav class="navbar navbar-expand-md bg-primary" data-bs-theme="dark" aria-label="Main navigation">
+        <div class="container">
+            <a class="navbar-brand" href="#">Hashini 👋</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#recipes">Recipes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://www.linkedin.com/in/hashiniliyanage/">LinkedIn</a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://github.com/hashinil">GitHub</a></li>
                 </ul>
+                <button id="themeBtn" class="btn btn-light btn-sm" type="button">Dark mode</button>
             </div>
-
-            <div class="content">
-                <h1>About Me..</h1>
-                <p>
-                    Welcome to my first web application! This page marks
-                    the first week of my journey in Web Technologies.
-                </p>
-
-                <div class="recipe">
-                    <h2>What Should I Cook Today? 🍳</h2>
-                    <p>Click the button to get a random recipe from TheMealDB API.</p>
-                    <button id="recipeBtn">Get a random recipe</button>
-                    <div id="recipeResult"></div>
-                </div>
-            </div>
-
-            <div class="facts">
-                <h2>My Interests</h2>
-
-                <p>
-                    Outside of my studies, I enjoy cooking and solving
-                    Rubik's Cubes.
-                </p>
-
-                <p>
-                    Cooking allows me to be creative, while solving
-                    Rubik's Cubes challenges my logical thinking and patience.
-                </p>
-
-                <img id="interestImg" src="images/rubic.png" alt="Rubik's Cube" width="460" height="345">
-                <br>
-                <button id="imageBtn">Show cooking</button>
-                <button id="factBtn">Random fun fact</button>
-                <p id="fact"></p>
-            </div>
-
-            <div class="footer">
-                <p>Resize the browser window to see the responsive effect.</p>
-            </div>
-
         </div>
+    </nav>
+
+    <main id="main" class="container my-4">
+
+        <!-- Header -->
+        <header class="p-4 mb-4 bg-body-tertiary rounded-3 text-center">
+            <h1 class="display-5 fw-bold">Hello, Everyone!</h1>
+            <p id="greeting" class="lead mb-1"></p>
+            <p id="clock" class="fw-bold mb-0" aria-live="off"></p>
+        </header>
+
+        <!-- About + Interests: side by side on medium screens and up, stacked on phones -->
+        <div class="row g-4 mb-4">
+            <section id="about" class="col-md-7" aria-labelledby="aboutHeading">
+                <h2 id="aboutHeading">About Me</h2>
+                <p>
+                    Welcome to my web application! I first built this page in plain HTML, CSS and
+                    JavaScript, and I have now rebuilt it using the Bootstrap 5 framework.
+                </p>
+                <p>
+                    Outside of my studies, I enjoy cooking and solving Rubik's Cubes. Cooking allows me
+                    to be creative, while Rubik's Cubes challenge my logical thinking and patience.
+                </p>
+            </section>
+
+            <section class="col-md-5" aria-labelledby="interestsHeading">
+                <div class="card h-100">
+                    <img id="interestImg" src="images/rubic.png" class="card-img-top" alt="A collection of Rubik's Cubes">
+                    <div class="card-body">
+                        <h2 id="interestsHeading" class="h5 card-title">My Interests</h2>
+                        <button id="imageBtn" class="btn btn-outline-primary btn-sm" type="button">Show cooking</button>
+                        <button id="factBtn" class="btn btn-outline-secondary btn-sm" type="button">Random fun fact</button>
+                        <p id="fact" class="fst-italic mt-2 mb-0" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Recipe search: HTML form + TheMealDB API -->
+        <section id="recipes" class="mb-4" aria-labelledby="recipesHeading">
+            <h2 id="recipesHeading">Find a Recipe 🍳</h2>
+            <p>Search by a main ingredient, for example <em>chicken</em>, <em>rice</em> or <em>egg</em>.</p>
+
+            <form id="recipeForm" class="row g-2 mb-3" role="search">
+                <div class="col-sm-8 col-md-6">
+                    <label for="ingredient" class="visually-hidden">Main ingredient</label>
+                    <input type="text" id="ingredient" class="form-control" placeholder="Enter an ingredient" required>
+                </div>
+                <div class="col-sm-4 col-md-auto">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </form>
+
+            <p id="recipeStatus" aria-live="polite"></p>
+            <div id="recipeResults" class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3"></div>
+        </section>
+
+        <!-- Contact form with Bootstrap validation -->
+        <section id="contact" class="mb-4" aria-labelledby="contactHeading">
+            <h2 id="contactHeading">Contact Me</h2>
+
+            <form id="contactForm" class="needs-validation col-lg-8" novalidate>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" required>
+                    <div class="invalid-feedback">Please enter your name.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" required>
+                    <div id="emailHelp" class="form-text">I'll never share your email.</div>
+                    <div class="invalid-feedback">Please enter a valid email address.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" rows="3" minlength="10" required></textarea>
+                    <div class="invalid-feedback">Please write a message of at least 10 characters.</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Send message</button>
+            </form>
+
+            <div id="contactSuccess" class="alert alert-success mt-3 d-none" role="alert"></div>
+        </section>
     </main>
+
+    <footer class="bg-primary text-white text-center py-3">
+        <p class="mb-0">Built with Bootstrap 5 · Resize the window to see the responsive layout.</p>
+    </footer>
+
+    <!-- Bootstrap 5 JavaScript bundle (needed for the navbar menu button) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <!-- My own JavaScript -->
     <script src="js/script.js"></script>
 </body>
 </html>
