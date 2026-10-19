@@ -1,189 +1,23 @@
-* {
-  box-sizing: border-box;
+/* Bootstrap does most of the styling - these are just small extras */
+
+#interestImg {
+  height: 260px;
+  object-fit: cover;
 }
 
-body {
-  font-family: "Lucida Sans", sans-serif;
-  font-size: 17px;
+.recipe-img {
+  height: 180px;
+  object-fit: cover;
 }
 
-.grid-container {
-  display: grid;
-  grid-template-areas:
-    'header'
-    'menu'
-    'main'
-    'facts'
-    'footer';
-  background-color: white;
-  gap: 10px;  
-}
-
-.header {
-  grid-area: header;
-  background-color: purple;
-  text-align: center;
-  color: #ffffff;
-}
-
-.header > h1 {
-  font-size: 40px;
-}
-
-.menu {
-  grid-area: menu;
-  }
-  
-.menu ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.menu li {
-  padding: 8px;
-  margin-bottom: 7px;
-  background-color: #33b5e5;
-  color: #ffffff;
-}
-
-.menu li:hover {
-  background-color: #0099cc;
-}
-  
-.content {
-  grid-area: main;
-}
-
-.content > h1 {
-  font-size: 30px;
-  margin-bottom: 7px;
-}
-
-.content > p {
-  margin-bottom: 7px;
-}
-
-.facts {
-  grid-area: facts;
-  border: 1px solid #0099cc;
-  background-color: beige;
-  padding: 10px;
-}
-
-.facts > h2 {
-  font-size: 20px;
-}
-
-.facts p {
-  margin-bottom: 10px;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-a {
-  margin-right: 15px;
-}
-
-.footer {
-  grid-area: footer;
-  background-color: #0099cc;
-  color: #ffffff;
-  text-align: center;
-}
-
-@media (min-width: 600px) {
-  .header {grid-area: 1 / span 6;}
-  .menu {grid-area: 2 / span 1;}
-  .content {grid-area: 2 / span 4;}
-  .facts {grid-area: 3 / span 6;}
-  .footer {grid-area: 4 / span 6;}
-}
-
-@media (min-width: 768px) {
-  .header {grid-area: 1 / span 6;}
-  .menu {grid-area: 2 / span 1;}
-  .content {grid-area: 2 / span 4;}
-  .facts {grid-area: 2 / span 1;}
-  .footer {grid-area: 3 / span 6;}
-}
-
-@media (max-width: 600px) {
-  a {
-    display: block;
-    margin: 10px 0;
-  }
-
-  body {
-      padding: 10px;
-  }
-
-  p {
-      font-size: 16px;
-  }
-
-  h1 {
-      font-size: 28px;
-  }
-
-  h2 {
-      font-size: 22px;
-  }
-
-}
-/* JavaScript enhancements */
-button {
-  padding: 8px 14px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  background-color: #33b5e5;
-  color: #ffffff;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0099cc;
-}
-
-body.dark {
-  background-color: #222222;
-  color: #eeeeee;
-}
-
-body.dark .grid-container {
-  background-color: #222222;
-}
-
-body.dark .facts {
-  background-color: #333333;
-}
-
-#clock {
-  font-weight: bold;
-}
-
-#fact {
-  font-style: italic;
-}
-
-body {
-  transition: background-color 0.4s, color 0.4s;
-}
-
-.recipe {
-  margin-top: 15px;
-  padding: 10px;
-  border: 1px dashed #33b5e5;
-}
-
-.recipe h2 {
-  font-size: 20px;
-}
-
-body.dark .content a {
-  color: #66ccff;
+/* Make the skip link visible and easy to see when it gets keyboard focus */
+.visually-hidden-focusable:focus {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1000;
+  padding: 8px 12px;
+  background: #ffffff;
+  color: #000000;
+  border: 2px solid #0d6efd;
 }
